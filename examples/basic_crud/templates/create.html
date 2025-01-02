@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}Create New Item - Flask CRUD{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-6 offset-md-3">
+        <h1>Create New Item</h1>
+        <form id="createForm" class="needs-validation" novalidate>
+            <div class="mb-3">
+                <label for="name" class="form-label">Name</label>
+                <input type="text" class="form-control" id="name" name="name" required>
+                <div class="invalid-feedback">
+                    Please provide a name.
+                </div>
+            </div>
+            <div class="mb-3">
+                <label for="description" class="form-label">Description</label>
+                <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
+                <div class="invalid-feedback">
+                    Please provide a description.
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Create Item</button>
+            <a href="{{ url_for('index') }}" class="btn btn-secondary">Cancel</a>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.getElementById('createForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        if (!this.checkValidity()) {
+            e.stopPropagation();
+            this.classList.add('was-validated');
+            return;
+        }
+
+        const formData = {
+            name: document.getElementById('name').value,
+            description: document.getElementById('description').value
+        };
+
+        try {
+            await apiCall('/api/items', 'POST', formData);
+            window.location.href = "{{ url_for('index') }}";
+        } catch (error) {
+            alert('Error creating item');
+            console.error('Error:', error);
+        }
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mermaid Markdown Example</title>
+    <!-- Include Mermaid Script -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <!-- Include Marked for Markdown parsing -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        pre {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+        }
+        .mermaid {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>Mermaid Diagram Example</h1>
+
+    <h2>Flowchart Example</h2>
+    <div class="mermaid">
+        graph TD
+            A[Start] --> B{Is it working?}
+            B -- Yes --> C[Great!]
+            B -- No --> D[Debug]
+            D --> B
+    </div>
+
+    <h2>Sequence Diagram Example</h2>
+    <div class="mermaid">
+        sequenceDiagram
+            participant Browser
+            participant Server
+            Browser->>Server: GET /api/data
+            Server-->>Browser: Return JSON
+            Browser->>Browser: Update UI
+    </div>
+
+    <h2>Markdown with Mermaid</h2>
+    <div id="content">
+# Sample Markdown with Mermaid
+
+Here's a simple flowchart:
+
+```mermaid
+graph LR
+    A[Input] --> B(Process)
+    B --> C{Decision}
+    C -->|Yes| D[Output 1]
+    C -->|No| E[Output 2]
+```
+    </div>
+
+    <script>
+        // Initialize Mermaid
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'default',
+            securityLevel: 'loose',
+            flowchart: {
+                useMaxWidth: true,
+                htmlLabels: true
+            }
+        });
+
+        // Parse and render markdown content
+        document.addEventListener('DOMContentLoaded', function() {
+            const content = document.getElementById('content');
+            const markdown = content.innerHTML;
+            content.innerHTML = marked.parse(markdown);
+            
+            // Re-run mermaid after markdown is rendered
+            mermaid.init(undefined, document.querySelectorAll('.mermaid'));
+        });
+    </script>
+</body>
+</html>

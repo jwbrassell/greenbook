@@ -1,0 +1,51 @@
+# Core Flask and Extensions
+Flask==2.3.3
+Flask-SQLAlchemy==3.0.5
+Flask-Migrate==4.0.5
+Flask-Login==0.6.2
+Flask-WTF==1.1.1
+Flask-Session==0.4.0
+Flask-SocketIO==5.3.6
+Flask-Caching==2.1.0
+
+# Database Drivers
+SQLAlchemy==2.0.20
+psycopg2-binary==2.9.7  # PostgreSQL
+mysqlclient==2.2.6      # MySQL
+PyMySQL==1.1.1          # MySQL (Pure Python)
+
+# Forms and Validation
+WTForms==3.2.1
+WTForms-SQLAlchemy==0.3
+email-validator==2.0.0
+
+# Security
+cryptography==44.0.0
+itsdangerous==2.2.0
+
+# AWS Integration
+boto3==1.28.44
+botocore==1.31.44
+
+# Real-time Communication
+python-socketio==5.12.0
+python-engineio==4.11.1
+simple-websocket==1.1.0
+
+# Caching and Sessions
+redis==4.6.0
+cachelib==0.9.0
+
+# Utilities
+python-dotenv==1.0.0    # Environment variables
+gunicorn==21.2.0        # Production server
+Werkzeug==2.3.7         # WSGI utilities
+Jinja2==3.1.5           # Template engine
+click==8.1.8            # Command line interface
+MarkupSafe==3.0.2       # String handling
+packaging==24.2         # Package metadata
+
+# Development Tools
+python-dateutil==2.8.2
+six==1.17.0
+typing_extensions==4.12.2
