@@ -1,40 +1,51 @@
-# Highcharts with Flask Integration Guide
+# ChartJS with Flask Integration Guide
 
 ## Table of Contents
-- [Highcharts with Flask Integration Guide](#highcharts-with-flask-integration-guide)
-  - [Table of Contents](#table-of-contents)
-  - [Introduction](#introduction)
+- [ChartJS with Flask Integration Guide](#chartjs-with-flask-integration-guide)
+  - [Overview](#overview)
+  - [Prerequisites](#prerequisites)
   - [Installation and Setup](#installation-and-setup)
-    - [Prerequisites](#prerequisites)
-    - [Basic Project Structure](#basic-project-structure)
-    - [Including Highcharts in Your Flask Application](#including-highcharts-in-your-flask-application)
-  - [Basic Flask Integration](#basic-flask-integration)
-- [app.py](#apppy)
-  - [Database Integration](#database-integration)
-    - [SQLAlchemy Setup](#sqlalchemy-setup)
-    - [Fetching Data for Charts](#fetching-data-for-charts)
-  - [Best Practices](#best-practices)
+  - [Basic Integration](#basic-integration)
   - [Chart Types](#chart-types)
-  - [Error Handling](#error-handling)
-  - [Additional Resources](#additional-resources)
-  - [Contributing](#contributing)
+  - [Advanced Features](#advanced-features)
+  - [Security Considerations](#security-considerations)
+  - [Performance Optimization](#performance-optimization)
+  - [Testing Strategies](#testing-strategies)
+  - [Troubleshooting](#troubleshooting)
+  - [Best Practices](#best-practices)
+  - [Integration Points](#integration-points)
+  - [Next Steps](#next-steps)
 
+## Overview
+This guide provides comprehensive documentation for integrating Chart.js with Flask applications. Chart.js is a flexible JavaScript charting library that makes it easy to create interactive and responsive charts. When combined with Flask's powerful backend capabilities, you can create dynamic data visualizations for your web applications.
 
-
-## Introduction
-
-This comprehensive guide demonstrates how to integrate Highcharts with Flask applications to create dynamic, interactive data visualizations. Highcharts is a powerful JavaScript charting library that offers a wide range of chart types and customization options.
+## Prerequisites
+- Python 3.7+
+- Flask 2.0+
+- Basic understanding of:
+  - HTML/CSS/JavaScript
+  - Python/Flask development
+  - RESTful APIs
+  - Database concepts
 
 ## Installation and Setup
-
-### Prerequisites
+1. Install required Python packages:
 ```bash
 pip install flask
+pip install flask-sqlalchemy
 pip install pandas  # For data manipulation
-pip install sqlalchemy  # For database operations
 ```
 
-### Basic Project Structure
+2. Include Chart.js in your project:
+```html
+<!-- Via CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!-- Or via npm -->
+npm install chart.js
+```
+
+3. Basic project structure:
 ```
 your_flask_app/
 ├── app.py
@@ -50,35 +61,12 @@ your_flask_app/
 └── requirements.txt
 ```
 
-### Including Highcharts in Your Flask Application
-
-Add the following to your base template:
-
-```html
-<!-- base.html -->
-<!DOCTYPE html>
-<html>
-<head>
-    <title>{% block title %}{% endblock %}</title>
-    <script src="https://code.highcharts.com/highcharts.js"></script>
-    <script src="https://code.highcharts.com/modules/exporting.js"></script>
-    <script src="https://code.highcharts.com/modules/export-data.js"></script>
-    <script src="https://code.highcharts.com/modules/accessibility.js"></script>
-</head>
-<body>
-    {% block content %}{% endblock %}
-</body>
-</html>
-```
-
-## Basic Flask Integration
-
-Here's a simple example of how to create a chart using Flask and Highcharts:
-
+## Basic Integration
+1. Flask Setup (app.py):
 ```python
-# app.py
 from flask import Flask, render_template, jsonify
-from random import randint
+from datetime import datetime
+import random
 
 app = Flask(__name__)
 
@@ -86,31 +74,60 @@ app = Flask(__name__)
 def index():
     return render_template('index.html')
 
-@app.route('/data')
-def get_data():
-    data = [randint(0, 100) for _ in range(10)]
+@app.route('/api/chart-data')
+def get_chart_data():
+    data = {
+        'labels': [datetime.now().strftime('%H:%M:%S') for _ in range(5)],
+        'datasets': [{
+            'label': 'Sample Data',
+            'data': [random.randint(0, 100) for _ in range(5)],
+            'borderColor': 'rgb(75, 192, 192)',
+            'tension': 0.1
+        }]
+    }
     return jsonify(data)
 ```
 
+2. Template Setup (templates/base.html):
 ```html
-<!-- templates/index.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block title %}{% endblock %}</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    {% block content %}{% endblock %}
+</body>
+</html>
+```
+
+3. Chart Implementation (templates/index.html):
+```html
 {% extends "base.html" %}
 
 {% block content %}
-<div id="chart-container"></div>
+<canvas id="myChart"></canvas>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    fetch('/data')
+    const ctx = document.getElementById('myChart');
+    
+    fetch('/api/chart-data')
         .then(response => response.json())
         .then(data => {
-            Highcharts.chart('chart-container', {
-                title: {
-                    text: 'Sample Chart'
-                },
-                series: [{
-                    data: data
-                }]
+            new Chart(ctx, {
+                type: 'line',
+                data: data,
+                options: {
+                    responsive: true,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Dynamic Data Chart'
+                        }
+                    }
+                }
             });
         });
 });
@@ -118,103 +135,159 @@ document.addEventListener('DOMContentLoaded', function() {
 {% endblock %}
 ```
 
-## Database Integration
+## Chart Types
+Detailed guides available for various chart types:
+- [Line Charts](line-charts.md)
+- [Bar Charts](bar-charts.md)
+- [Pie Charts](pie-charts.md)
+- [Doughnut Charts](doughnut-charts.md)
+- [Radar Charts](radar-charts.md)
+- [Polar Area Charts](polar-area-charts.md)
+- [Bubble Charts](bubble-charts.md)
+- [Scatter Charts](scatter-charts.md)
+- [Area Charts](area-charts.md)
+- [Mixed Charts](mixed-charts.md)
 
-### SQLAlchemy Setup
+## Advanced Features
+- [Animations](animated-charts.md)
+- [Interactions](events-and-interactions.md)
+- [Plugins](plugins.md)
+- [Responsive Design](responsive-charts.md)
+- [Streaming Data](streaming-charts.md)
 
+## Security Considerations
+1. Input Validation
+   - Sanitize all user inputs
+   - Validate data types and ranges
+   - Implement request rate limiting
+   - Use prepared statements for queries
+
+2. Authentication & Authorization
+   - Secure API endpoints
+   - Implement proper user authentication
+   - Use role-based access control
+   - Protect sensitive data
+
+3. CSRF Protection
+```python
+from flask_wtf.csrf import CSRFProtect
+
+csrf = CSRFProtect(app)
+
+@app.route('/api/data', methods=['POST'])
+@csrf.exempt
+def api_data():
+    # API endpoint code
+```
+
+## Performance Optimization
+1. Data Management
+   - Implement data pagination
+   - Use efficient database queries
+   - Cache frequently accessed data
+   - Optimize payload size
+
+2. Chart Rendering
+   - Limit data points displayed
+   - Use appropriate chart types
+   - Implement lazy loading
+   - Optimize animations
+
+Example caching implementation:
+```python
+from flask_caching import Cache
+
+cache = Cache(app, config={'CACHE_TYPE': 'simple'})
+
+@app.route('/api/chart-data')
+@cache.cached(timeout=300)  # Cache for 5 minutes
+def get_chart_data():
+    # Data fetching code
+```
+
+## Testing Strategies
+1. Unit Testing
+```python
+def test_chart_data_api():
+    response = client.get('/api/chart-data')
+    assert response.status_code == 200
+    data = response.get_json()
+    assert 'labels' in data
+    assert 'datasets' in data
+```
+
+2. Integration Testing
+```python
+def test_chart_rendering():
+    response = client.get('/')
+    assert response.status_code == 200
+    assert b'<canvas id="myChart">' in response.data
+```
+
+## Troubleshooting
+Common issues and solutions:
+1. Chart Not Rendering
+   - Check console for JavaScript errors
+   - Verify data format
+   - Ensure Chart.js is properly loaded
+
+2. Performance Issues
+   - Reduce data points
+   - Implement pagination
+   - Use appropriate chart type
+   - Monitor memory usage
+
+## Best Practices
+1. Code Organization
+   - Separate concerns (data/presentation)
+   - Use modular chart configurations
+   - Implement error handling
+   - Document your code
+
+2. Data Handling
+   - Process data server-side
+   - Implement proper validation
+   - Use appropriate data structures
+   - Handle missing data gracefully
+
+3. User Experience
+   - Provide loading indicators
+   - Implement error messages
+   - Use responsive design
+   - Ensure accessibility
+
+## Integration Points
+1. Database Integration
 ```python
 from flask_sqlalchemy import SQLAlchemy
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///charts.db'
 db = SQLAlchemy(app)
 
 class DataPoint(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     value = db.Column(db.Float)
-    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+    timestamp = db.Column(db.DateTime)
 ```
 
-### Fetching Data for Charts
-
+2. External APIs
 ```python
-@app.route('/chart-data')
-def get_chart_data():
-    data_points = DataPoint.query.order_by(DataPoint.timestamp).all()
-    return jsonify({
-        'timestamps': [dp.timestamp.strftime('%Y-%m-%d %H:%M:%S') for dp in data_points],
-        'values': [dp.value for dp in data_points]
-    })
+import requests
+
+@app.route('/api/external-data')
+def get_external_data():
+    response = requests.get('https://api.example.com/data')
+    return jsonify(response.json())
 ```
 
-## Best Practices
+## Next Steps
+1. Advanced Topics
+   - Custom chart plugins
+   - Real-time updates
+   - Complex visualizations
+   - Data analytics integration
 
-1. **Data Processing**
-   - Process data on the server-side when dealing with large datasets
-   - Use appropriate data formats for different chart types
-   - Implement data caching for better performance
-
-2. **Security**
-   - Validate and sanitize all data before rendering
-   - Implement proper authentication for sensitive data
-   - Use CSRF protection for forms
-
-3. **Performance**
-   - Load Highcharts modules only when needed
-   - Implement lazy loading for charts
-   - Use appropriate data structures for different visualization needs
-
-4. **Accessibility**
-   - Include proper ARIA labels
-   - Provide alternative text for charts
-   - Ensure keyboard navigation support
-
-## Chart Types
-
-This documentation covers 20 different chart types, each with detailed examples and Flask integration:
-
-1. Line Charts
-2. Bar Charts
-3. Area Charts
-4. Pie Charts
-5. Column Charts
-6. Scatter Charts
-7. Bubble Charts
-8. Gauge Charts
-9. Heatmap Charts
-10. Treemap Charts
-11. Network Charts
-12. Organization Charts
-13. Funnel Charts
-14. Pyramid Charts
-15. Polar Charts
-16. Radar Charts
-17. Boxplot Charts
-18. Waterfall Charts
-19. Timeline Charts
-20. Stream Charts
-
-Each chart type includes:
-- Basic configuration
-- Common options and customizations
-- Database integration examples
-- Three practical examples with different use cases
-
-## Error Handling
-
-```python
-@app.errorhandler(500)
-def handle_error(error):
-    return jsonify({
-        'error': 'An error occurred while processing the chart data'
-    }), 500
-```
-
-## Additional Resources
-
-- [Highcharts Official Documentation](https://www.highcharts.com/docs)
-- [Flask Documentation](https://flask.palletsprojects.com/)
-- [SQLAlchemy Documentation](https://docs.sqlalchemy.org/)
-
-## Contributing
-
-Feel free to contribute to this documentation by submitting pull requests or creating issues for improvements and corrections.
+2. Further Learning
+   - [Chart.js Documentation](https://www.chartjs.org/docs/)
+   - [Flask Documentation](https://flask.palletsprojects.com/)
+   - [Related Tutorials](https://github.com/topics/chartjs-flask)
+   - Community resources
