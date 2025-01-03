@@ -1,0 +1,11 @@
+# Core dependencies
+requests>=2.31.0
+python-dotenv>=1.0.0
+
+# Type checking
+typing-extensions>=4.7.1
+
+# Optional dependencies for extended functionality
+netmiko>=4.1.2  # For CLI-based device interaction
+paramiko>=3.3.1  # SSH implementation
+pyyaml>=6.0.1   # Configuration file parsing

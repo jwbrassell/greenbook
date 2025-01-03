@@ -1,0 +1,28 @@
+{
+  "devices": [
+    {
+      "hostname": "switch1.example.com",
+      "type": "cisco_ios",
+      "description": "Core Switch 1",
+      "location": "Main Data Center"
+    },
+    {
+      "hostname": "router1.example.com",
+      "type": "cisco_ios_xe",
+      "description": "Edge Router 1",
+      "location": "Main Data Center"
+    },
+    {
+      "hostname": "switch2.example.com",
+      "type": "cisco_ios",
+      "description": "Access Switch 1",
+      "location": "Branch Office"
+    },
+    {
+      "hostname": "firewall1.example.com",
+      "type": "palo_alto",
+      "description": "Main Firewall",
+      "location": "Main Data Center"
+    }
+  ]
+}
